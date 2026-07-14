@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% block title %}AI Use Cases — Music, Video, Code, Images & More | AI Universe{% endblock %}
+{% block meta_desc %}Explore 8+ AI use case categories: AI music generation with Suno, AI video with Runway ML, AI images with Midjourney, and more.{% endblock %}
+
+{% block content %}
+<!-- ===== HERO ===== -->
+<section class="usecases-hero">
+    <div class="container">
+        <div class="tag" style="margin-bottom:20px;">🎯 Real World Applications</div>
+        <h1 class="section-title" style="font-size: clamp(2.5rem,5vw,4rem); letter-spacing:-2px;">
+            What Can AI <span class="text-gradient">Create For You?</span>
+        </h1>
+        <p class="section-subtitle" style="margin: 0 auto 20px; text-align:center;">
+            From generating entire music albums to editing videos and writing code — AI has transformed every creative field.
+        </p>
+    </div>
+</section>
+
+<!-- ===== USE CASES GRID ===== -->
+<section class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="usecases-grid">
+            {% for uc in use_cases %}
+            <div class="glass-card usecase-card animate-on-scroll"
+                 style="--card-glow: {{ uc.glow }}; --card-glow-solid: {{ uc.color }};">
+
+                <span class="usecase-emoji">{{ uc.emoji }}</span>
+
+                <h2 class="usecase-category" style="color: {{ uc.color }};">{{ uc.category }}</h2>
+                <p class="usecase-desc">{{ uc.description }}</p>
+
+                <div class="usecase-tools">
+                    <div class="usecase-tools-title">🛠️ Top Tools</div>
+                    <div class="usecase-tools-list">
+                        {% for tool in uc.tools %}
+                        <a href="{{ tool.url }}" target="_blank" class="usecase-tool-item">
+                            <div>
+                                <div class="usecase-tool-name">{{ tool.name }}</div>
+                                <div class="usecase-tool-desc">{{ tool.desc }}</div>
+                            </div>
+                            <span class="usecase-tool-arrow">›</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="usecase-tools-title" style="margin-bottom:8px;">💡 Example Uses</div>
+                    <div class="examples-tags">
+                        {% for example in uc.examples %}
+                        <span class="example-tag">{{ example }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section-sm" style="padding-bottom: 120px;">
+    <div class="container" style="text-align:center;">
+        <div class="glass-card animate-on-scroll" style="padding:60px 40px; max-width:640px; margin:0 auto;">
+            <h2 class="section-title" style="margin-bottom:14px;">
+                Want to <span class="text-gradient">Compare AI Tools</span>?
+            </h2>
+            <p style="color:var(--text-secondary); margin-bottom:28px;">
+                See a side-by-side comparison of all major AI agents with features, pricing, and ratings.
+            </p>
+            <a href="{% url 'explore' %}" class="btn btn-primary">🤖 Explore AI Agents →</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

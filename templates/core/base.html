@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Universe — Explore the Future of AI{% endblock %}</title>
+    <meta name="description" content="{% block meta_desc %}Discover AI tools like Gemini, ChatGPT, Claude and explore use cases in music, video, code, and more.{% endblock %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-grid"></div>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="nav-logo">
+                <span class="logo-icon">✦</span>
+                <span class="logo-text">AI<span class="logo-accent">Universe</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <span>Home</span>
+                </a>
+                <a href="{% url 'usecases' %}" class="nav-link {% if request.resolver_match.url_name == 'usecases' %}active{% endif %}">
+                    <span>Use Cases</span>
+                </a>
+                <a href="{% url 'explore' %}" class="nav-link {% if request.resolver_match.url_name == 'explore' %}active{% endif %}">
+                    <span>Explore AI</span>
+                </a>
+            </div>
+            <a href="{% url 'explore' %}" class="nav-cta">Get Started →</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
+        </div>
+        <div class="nav-mobile" id="navMobile">
+            <a href="{% url 'home' %}" class="nav-mobile-link">Home</a>
+            <a href="{% url 'usecases' %}" class="nav-mobile-link">Use Cases</a>
+            <a href="{% url 'explore' %}" class="nav-mobile-link">Explore AI</a>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span class="logo-text">AI<span class="logo-accent">Universe</span></span>
+                <p>Exploring the frontier of artificial intelligence — so you don't have to.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Pages</h4>
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'usecases' %}">Use Cases</a>
+                    <a href="{% url 'explore' %}">Explore AI</a>
+                </div>
+                <div class="footer-col">
+                    <h4>AI Tools</h4>
+                    <a href="https://gemini.google.com" target="_blank">Gemini</a>
+                    <a href="https://chat.openai.com" target="_blank">ChatGPT</a>
+                    <a href="https://claude.ai" target="_blank">Claude</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Use Cases</h4>
+                    <a href="{% url 'usecases' %}">AI Music</a>
+                    <a href="{% url 'usecases' %}">AI Video</a>
+                    <a href="{% url 'usecases' %}">AI Agents</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 AI Universe. Built with Django &amp; ❤️ — Powered by the future of AI.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const navToggle = document.getElementById('navToggle');
+        const navMobile = document.getElementById('navMobile');
+        navToggle.addEventListener('click', () => {
+            navMobile.classList.toggle('open');
+        });
+
+        // Intersection observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

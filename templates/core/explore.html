@@ -1,0 +1,168 @@
+{% extends 'core/base.html' %}
+{% block title %}Explore AI Agents — Compare Gemini, ChatGPT, Claude & More | AI Universe{% endblock %}
+{% block meta_desc %}Compare top AI agents: Gemini, ChatGPT, Claude, Perplexity, Copilot, and Grok — with features, pricing, and ratings side by side.{% endblock %}
+
+{% block content %}
+<!-- ===== HERO ===== -->
+<section class="explore-hero">
+    <div class="container">
+        <div class="tag" style="margin-bottom:20px;">🤖 AI Agents Comparison</div>
+        <h1 class="section-title" style="font-size: clamp(2.5rem,5vw,4rem); letter-spacing:-2px;">
+            Find Your <span class="text-gradient">Perfect AI Agent</span>
+        </h1>
+        <p class="section-subtitle" style="margin: 0 auto; text-align:center;">
+            Compare the world's leading AI assistants — their capabilities, context windows, pricing, and best use cases — all in one place.
+        </p>
+    </div>
+</section>
+
+<!-- ===== AGENTS GRID ===== -->
+<section class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="agents-grid">
+            {% for agent in agents %}
+            <div class="glass-card agent-card animate-on-scroll">
+                <!-- Header -->
+                <div class="agent-header">
+                    <div class="agent-icon" style="border-color: {{ agent.color }}40;">
+                        {{ agent.icon }}
+                    </div>
+                    <div>
+                        <div class="agent-name">{{ agent.name }}</div>
+                        <div class="agent-company">{{ agent.company }}</div>
+                    </div>
+                    <span class="agent-version">{{ agent.version }}</span>
+                </div>
+
+                <!-- Badges -->
+                <div class="agent-badges">
+                    {% if agent.multimodal %}
+                    <span class="badge badge-purple">👁️ Multimodal</span>
+                    {% endif %}
+                    {% if agent.free_tier %}
+                    <span class="badge badge-green">✓ Free Tier</span>
+                    {% else %}
+                    <span class="badge badge-gray">✗ No Free Tier</span>
+                    {% endif %}
+                    {% if agent.api %}
+                    <span class="badge badge-blue">⚡ API Access</span>
+                    {% endif %}
+                </div>
+
+                <!-- Specialties -->
+                <div class="usecase-tools-title" style="margin-bottom:8px;">✨ Key Features</div>
+                <div class="agent-specialties" style="margin-bottom:18px;">
+                    {% for specialty in agent.specialties %}
+                    <span class="specialty-tag">{{ specialty }}</span>
+                    {% endfor %}
+                </div>
+
+                <!-- Best For -->
+                <div style="padding:10px 14px; background:rgba(255,255,255,0.03); border-radius:10px; border:1px solid var(--border); margin-bottom:16px;">
+                    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:4px;">Best For</div>
+                    <div style="font-size:0.9rem; font-weight:600;">{{ agent.best_for }}</div>
+                </div>
+
+                <!-- Meta -->
+                <div class="agent-meta">
+                    <div>
+                        <div class="agent-rate">
+                            {% with rating=agent.rating %}
+                            ⭐ {{ rating }}/5.0
+                            {% endwith %}
+                        </div>
+                        <div class="agent-ctx">Context: {{ agent.context }}</div>
+                        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">{{ agent.pricing }}</div>
+                    </div>
+                    <a href="{{ agent.url }}" target="_blank" rel="noopener" class="agent-try-btn">
+                        Try Now →
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== HOW TO USE AI WORKFLOW ===== -->
+<section class="workflow-section">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:60px;">
+            <div class="tag" style="margin-bottom:16px;">📋 Best Practices</div>
+            <h2 class="section-title">
+                How to <span class="text-gradient">Use AI Effectively</span>
+            </h2>
+            <p class="section-subtitle" style="margin: 0 auto;">
+                Follow this 5-step workflow to get the best results from any AI tool or agent.
+            </p>
+        </div>
+        <div class="workflow-steps">
+            {% for step in workflow_steps %}
+            <div class="glass-card workflow-step animate-on-scroll">
+                <div class="step-num">{{ step.step }}</div>
+                <div>
+                    <div class="step-icon">{{ step.icon }}</div>
+                    <div class="step-title">{{ step.title }}</div>
+                    <div class="step-desc">{{ step.desc }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== QUICK COMPARISON TABLE ===== -->
+<section class="section" style="padding-top:0; padding-bottom: 120px;">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:48px;">
+            <div class="tag" style="margin-bottom:16px;">📊 Quick Comparison</div>
+            <h2 class="section-title">
+                AI Tools at a <span class="text-gradient">Glance</span>
+            </h2>
+        </div>
+        <div class="glass-card animate-on-scroll" style="overflow-x:auto; padding:0;">
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="border-bottom:1px solid var(--border);">
+                        <th style="padding:18px 20px; text-align:left; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">AI Tool</th>
+                        <th style="padding:18px 20px; text-align:left; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">Context</th>
+                        <th style="padding:18px 20px; text-align:left; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">Multimodal</th>
+                        <th style="padding:18px 20px; text-align:left; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">Free Tier</th>
+                        <th style="padding:18px 20px; text-align:left; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">Pricing</th>
+                        <th style="padding:18px 20px; text-align:left; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agent in agents %}
+                    <tr style="border-bottom:1px solid var(--border); transition:background 0.2s;"
+                        onmouseover="this.style.background='rgba(255,255,255,0.03)'"
+                        onmouseout="this.style.background='transparent'">
+                        <td style="padding:16px 20px;">
+                            <span style="font-size:1.2rem; margin-right:8px;">{{ agent.icon }}</span>
+                            <span style="font-weight:600;">{{ agent.name }}</span>
+                        </td>
+                        <td style="padding:16px 20px; color:var(--text-secondary); font-size:0.9rem;">{{ agent.context }}</td>
+                        <td style="padding:16px 20px;">
+                            {% if agent.multimodal %}
+                            <span style="color:#10B981;">✓ Yes</span>
+                            {% else %}
+                            <span style="color:var(--text-muted);">✗ No</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding:16px 20px;">
+                            {% if agent.free_tier %}
+                            <span style="color:#10B981;">✓ Free</span>
+                            {% else %}
+                            <span style="color:var(--text-muted);">Paid only</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding:16px 20px; color:var(--text-secondary); font-size:0.85rem;">{{ agent.pricing }}</td>
+                        <td style="padding:16px 20px; color:#F59E0B;">⭐ {{ agent.rating }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

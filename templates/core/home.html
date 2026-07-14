@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% block title %}AI Universe — Home | Gemini, ChatGPT, Claude & More{% endblock %}
+
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>✦</span> Powered by the Future of AI
+            </div>
+            <h1 class="hero-title">
+                Explore the World<br>
+                of <span class="text-gradient">Artificial</span><br>
+                <span class="text-gradient">Intelligence</span>
+            </h1>
+            <p class="hero-subtitle">
+                Discover Gemini, ChatGPT, Claude, and 50+ AI tools. From AI music and video creation to autonomous agents — your complete AI universe awaits.
+            </p>
+            <div class="hero-actions">
+                <a href="{% url 'usecases' %}" class="btn btn-primary">
+                    🚀 Explore Use Cases
+                </a>
+                <a href="{% url 'explore' %}" class="btn btn-glass">
+                    🤖 Compare AI Tools →
+                </a>
+            </div>
+            <div class="hero-stats">
+                {% for stat in stats %}
+                <div class="hero-stat">
+                    <div class="hero-stat-value">{{ stat.value }}</div>
+                    <div class="hero-stat-label">{{ stat.label }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== STATS SECTION ===== -->
+<section class="section-sm" style="z-index:1; position:relative;">
+    <div class="container">
+        <div class="stats-grid">
+            {% for stat in stats %}
+            <div class="glass-card stat-card animate-on-scroll">
+                <div class="stat-icon">{{ stat.icon }}</div>
+                <div class="stat-value">{{ stat.value }}</div>
+                <div class="stat-label">{{ stat.label }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== AI TOOLS SECTION ===== -->
+<section class="section">
+    <div class="container">
+        <div class="tag" style="margin-bottom: 16px;">⚡ Top AI Tools</div>
+        <h2 class="section-title">
+            Meet the <span class="text-gradient">AI Powerhouses</span>
+        </h2>
+        <p class="section-subtitle">
+            The world's most powerful AI tools, models, and platforms — all in one place. Click to explore each one.
+        </p>
+        <div class="tools-grid">
+            {% for tool in ai_tools %}
+            <div class="glass-card tool-card animate-on-scroll"
+                 style="--card-gradient: {{ tool.gradient }};
+                        --tool-color-bg: {{ tool.color }}20;
+                        --tool-color-border: {{ tool.color }}40;">
+                <div class="tool-icon">{{ tool.icon }}</div>
+                <div class="tool-category">{{ tool.category }}</div>
+                <div class="tool-name">{{ tool.name }}</div>
+                <div class="tool-desc">{{ tool.description }}</div>
+                <div class="tool-features">
+                    {% for feature in tool.features %}
+                    <span class="tool-feature-tag">{{ feature }}</span>
+                    {% endfor %}
+                </div>
+                <a href="{{ tool.url }}" target="_blank" class="tool-link">
+                    Explore {{ tool.name }} <span>→</span>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section class="section-sm" style="z-index:1; position:relative; padding-bottom: 120px;">
+    <div class="container" style="text-align:center;">
+        <div class="glass-card animate-on-scroll" style="padding: 64px 40px; max-width: 700px; margin: 0 auto;">
+            <div style="font-size:3rem; margin-bottom:20px;">🚀</div>
+            <h2 class="section-title" style="margin-bottom:16px;">
+                Ready to <span class="text-gradient">Dive In?</span>
+            </h2>
+            <p style="color:var(--text-secondary); margin-bottom:32px; font-size:1.05rem;">
+                Explore real-world AI use cases ranging from music creation to autonomous agents.
+            </p>
+            <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+                <a href="{% url 'usecases' %}" class="btn btn-primary">🎯 Browse Use Cases</a>
+                <a href="{% url 'explore' %}" class="btn btn-glass">🤖 Explore AI Agents</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
