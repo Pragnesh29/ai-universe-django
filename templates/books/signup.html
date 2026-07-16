@@ -64,8 +64,8 @@
                 <span class="logo-text">AI<span class="logo-accent">Universe</span></span>
             </div>
 
-            <h1 class="auth-title">Account Banao ✨</h1>
-            <p class="auth-subtitle">Books library mein join karo — free hai!</p>
+            <h1 class="auth-title">Create Account ✨</h1>
+            <p class="auth-subtitle">Join the Books library — it's free!</p>
 
             {% if messages %}
                 {% for message in messages %}
@@ -93,13 +93,14 @@
                         {{ form.password2 }}
                     </div>
                 </div>
-                <button type="submit" class="auth-btn" id="signup-btn">Account Banao →</button>
+                <button type="submit" class="auth-btn" id="signup-btn">Create Account →</button>
             </form>
 
             <hr class="divider">
             <div class="auth-footer">
-                Pehle se account hai? <a href="{% url 'login' %}">Login karein</a>
+                Already have an account? <a href="{% url 'login' %}">Login here</a>
             </div>
+
         </div>
     </div>
 </body>

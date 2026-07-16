@@ -165,7 +165,8 @@
 }
 .book-actions {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 .btn-view {
     flex: 1;
@@ -177,6 +178,7 @@
     transition: all 0.2s;
     font-family: 'Outfit', sans-serif;
     cursor: pointer;
+    min-width: 80px;
 }
 .btn-view:hover { opacity: 0.9; transform: translateY(-1px); }
 .btn-download {
@@ -191,6 +193,18 @@
     display: flex; align-items: center; gap: 0.35rem;
 }
 .btn-download:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.btn-delete {
+    padding: 0.65rem 0.875rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 10px;
+    color: #fca5a5;
+    font-size: 0.85rem; font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.35rem;
+}
+.btn-delete:hover { background: rgba(239, 68, 68, 0.25); color: #ef4444; border-color: rgba(239, 68, 68, 0.5); }
 
 /* Empty state */
 .empty-state {
@@ -223,7 +237,7 @@
 <!-- Hero -->
 <section class="books-hero">
     <h1>📚 Books <span>Library</span></h1>
-    <p>AI, Technology aur Knowledge ki duniya — PDF padho, preview karo, download karo.</p>
+    <p>The world of AI, Technology, and Knowledge — Read, preview, and download PDFs.</p>
 </section>
 
 <!-- Toolbar -->
@@ -236,14 +250,14 @@
                 name="q"
                 class="search-input"
                 id="book-search-input"
-                placeholder="Title ya description se book dhundho..."
+                placeholder="Search books by title or description..."
                 value="{{ query }}"
                 autocomplete="off"
             >
         </form>
     </div>
     <a href="{% url 'book_upload' %}" class="upload-btn" id="upload-book-btn">
-        ➕ Book Upload karo
+        ➕ Upload Book
     </a>
 </div>
 
@@ -251,7 +265,7 @@
 <div class="books-section">
     {% if query %}
         <p class="books-meta">
-            "{{ query }}" ke liye {{ books.count }} result{{ books.count|pluralize }} mila
+            Found {{ books.count }} result{{ books.count|pluralize }} for "{{ query }}"
         </p>
     {% else %}
         <p class="books-meta">Total {{ total_books }} book{{ total_books|pluralize }} available</p>
@@ -289,6 +303,11 @@
                     <a href="{% url 'book_download' book.pk %}" class="btn-download" id="download-book-{{ book.pk }}">
                         ⬇ Download
                     </a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'book_delete' book.pk %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this book?');">
+                            🗑 Delete
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -298,11 +317,11 @@
     <div class="empty-state">
         <div class="empty-icon">📭</div>
         {% if query %}
-            <h3>"{{ query }}" se koi book nahi mili</h3>
-            <p>Alag keywords try karein</p>
+            <h3>No books found for "{{ query }}"</h3>
+            <p>Try different keywords</p>
         {% else %}
-            <h3>Library abhi khali hai</h3>
-            <p>Pehli book upload karo! 🚀</p>
+            <h3>Library is currently empty</h3>
+            <p>Be the first to upload a book! 🚀</p>
         {% endif %}
     </div>
     {% endif %}
@@ -332,3 +351,4 @@
     }
 </script>
 {% endblock %}
+

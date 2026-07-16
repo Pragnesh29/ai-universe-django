@@ -27,7 +27,7 @@ def login_view(request):
             next_url = request.GET.get('next', 'book_list')
             return redirect(next_url)
         else:
-            messages.error(request, 'Username ya password galat hai.')
+            messages.error(request, 'Incorrect username or password.')
 
     return render(request, 'books/login.html', {'form': form})
 
@@ -40,7 +40,7 @@ def signup_view(request):
     if request.method == 'POST':
         if form.is_valid():
             user = form.save()
-            messages.success(request, 'Account ban gaya! Ab login karein.')
+            messages.success(request, 'Account created successfully! Please log in.')
             return redirect('login')
         else:
             for field, errors in form.errors.items():
@@ -52,7 +52,7 @@ def signup_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.info(request, 'Aap logout ho gaye hain.')
+    messages.info(request, 'You have been logged out.')
     return redirect('login')
 
 
@@ -98,11 +98,11 @@ def book_upload(request):
             book.save()
             messages.success(
                 request,
-                '📚 Book upload ho gayi! Admin approval ke baad library mein dikhegi.'
+                '📚 Book uploaded successfully! It will appear in the library once approved by the admin.'
             )
             return redirect('book_list')
         else:
-            messages.error(request, 'Kuch error hai — form dobara check karein.')
+            messages.error(request, 'There was an error. Please check the form and try again.')
     else:
         form = BookUploadForm()
 
@@ -122,6 +122,20 @@ def book_download(request, pk):
             response['Content-Disposition'] = f'attachment; filename="{book.title}.pdf"'
             return response
         else:
-            raise Http404("File nahi mila.")
+            raise Http404("File not found.")
     except Exception:
-        raise Http404("File nahi mila.")
+        raise Http404("File not found.")
+
+
+@login_required(login_url='/login/')
+def book_delete(request, pk):
+    if not request.user.is_staff:
+        messages.error(request, 'You do not have permission to delete this book.')
+        return redirect('book_list')
+    
+    book = get_object_or_404(Book, pk=pk)
+    title = book.title
+    book.delete()
+    messages.success(request, f'Book "{title}" was successfully deleted.')
+    return redirect('book_list')
+

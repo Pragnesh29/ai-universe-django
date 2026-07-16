@@ -71,7 +71,7 @@
             </div>
 
             <h1 class="auth-title">Welcome Back 👋</h1>
-            <p class="auth-subtitle">Books library access ke liye login karein</p>
+            <p class="auth-subtitle">Please log in to access the books library</p>
 
             {% if messages %}
                 {% for message in messages %}
@@ -92,13 +92,14 @@
                 {% if form.non_field_errors %}
                     <div class="alert alert-error">{{ form.non_field_errors.0 }}</div>
                 {% endif %}
-                <button type="submit" class="auth-btn" id="login-btn">Login karo →</button>
+                <button type="submit" class="auth-btn" id="login-btn">Login →</button>
             </form>
 
             <hr class="divider">
             <div class="auth-footer">
-                Account nahi hai? <a href="{% url 'signup' %}">Sign Up karo</a>
+                Don't have an account? <a href="{% url 'signup' %}">Sign Up here</a>
             </div>
+
         </div>
     </div>
 </body>

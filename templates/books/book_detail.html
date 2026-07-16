@@ -159,7 +159,7 @@
 {% block content %}
 <div class="detail-page">
     <a href="{% url 'book_list' %}" class="detail-back" id="back-to-library">
-        ← Library par wapas jao
+        ← Back to Library
     </a>
 
     <div class="detail-layout">
@@ -199,6 +199,11 @@
                     <a href="{% url 'book_download' book.pk %}" class="btn-download-lg" id="download-book-{{ book.pk }}">
                         ⬇ Download PDF
                     </a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'book_delete' book.pk %}" class="btn-download-lg btn-delete" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; display: block; text-align: center; text-decoration: none;" onclick="return confirm('Are you sure you want to delete this book?');">
+                            🗑 Delete Book
+                        </a>
+                    {% endif %}
                     <a href="{% url 'book_list' %}" class="btn-back-lg">← Library</a>
                 </div>
             </div>
@@ -218,9 +223,10 @@
                 src="{{ book.pdf_file.url }}"
                 title="{{ book.title }} PDF Preview"
             >
-                <p>Browser PDF support nahi karta. <a href="{{ book.pdf_file.url }}" style="color:#a5b4fc">Yahaan se download karein</a></p>
+                <p>Your browser does not support PDFs. <a href="{{ book.pdf_file.url }}" style="color:#a5b4fc">Click here to download the PDF</a></p>
             </iframe>
         </div>
     </div>
 </div>
+
 {% endblock %}

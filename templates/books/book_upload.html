@@ -115,12 +115,12 @@
 
 {% block content %}
 <div class="upload-page">
-    <a href="{% url 'book_list' %}" class="upload-back">← Library par wapas jao</a>
+    <a href="{% url 'book_list' %}" class="upload-back">← Back to Library</a>
 
     <div class="upload-card">
         <div class="upload-header">
-            <h1>📤 Book Upload karo</h1>
-            <p>PDF upload karein — admin review ke baad library mein dikhegi</p>
+            <h1>📤 Upload Book</h1>
+            <p>Upload a PDF — it will appear in the library once approved by the administrator</p>
         </div>
 
         {% if messages %}
@@ -131,7 +131,7 @@
 
         <div class="notice-box">
             <span>ℹ️</span>
-            <div>Upload ke baad admin approval hogi. Approved hone par hi library mein dikhegi. Max file size: <strong>50 MB</strong>.</div>
+            <div>All uploads require administrator approval. Maximum file size: <strong>50 MB</strong>.</div>
         </div>
 
         <form method="post" enctype="multipart/form-data" id="upload-form">
@@ -153,13 +153,13 @@
 
             <!-- PDF Upload -->
             <div class="form-group">
-                <label class="form-label">PDF File Upload karo <span>*</span></label>
+                <label class="form-label">Upload PDF File <span>*</span></label>
                 <div class="drop-zone" id="pdf-drop-zone">
                     <div class="drop-icon">📄</div>
-                    <p>PDF drag karein ya <strong>click karke select karein</strong></p>
-                    <p style="margin-top:0.35rem; font-size:0.78rem; opacity:0.6;">Sirf .pdf files — Max 50 MB</p>
+                    <p>Drag PDF here or <strong>click to browse</strong></p>
+                    <p style="margin-top:0.35rem; font-size:0.78rem; opacity:0.6;">PDF files only — Max 50 MB</p>
                     {{ form.pdf_file }}
-                    <div class="file-chosen" id="pdf-chosen">✅ File selected: <span id="pdf-name"></span></div>
+                    <div class="file-chosen" id="pdf-chosen">✅ Selected: <span id="pdf-name"></span></div>
                 </div>
             </div>
 
@@ -168,15 +168,15 @@
                 <label class="form-label">Cover Image <span>(optional)</span></label>
                 <div class="drop-zone cover-drop-zone" id="cover-drop-zone">
                     <div class="drop-icon">🖼️</div>
-                    <p>Cover image drag karein ya <strong>click karke select karein</strong></p>
+                    <p>Drag cover image here or <strong>click to browse</strong></p>
                     <p style="margin-top:0.35rem; font-size:0.78rem; opacity:0.6;">JPG, PNG, WebP — Max 5 MB</p>
                     {{ form.cover_image }}
-                    <div class="file-chosen" id="cover-chosen">✅ File selected: <span id="cover-name"></span></div>
+                    <div class="file-chosen" id="cover-chosen">✅ Selected: <span id="cover-name"></span></div>
                 </div>
             </div>
 
             <button type="submit" class="submit-btn" id="submit-upload-btn">
-                📤 Upload karo
+                📤 Upload Book
             </button>
         </form>
     </div>
@@ -220,7 +220,8 @@
     document.getElementById('upload-form').addEventListener('submit', function() {
         const btn = document.getElementById('submit-upload-btn');
         btn.disabled = true;
-        btn.textContent = '⏳ Upload ho raha hai...';
+        btn.textContent = '⏳ Uploading book...';
     });
 </script>
 {% endblock %}
+
