@@ -88,7 +88,11 @@ server {
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /static/ {
-        root $APP_DIR;
+        alias $APP_DIR/staticfiles/;
+    }
+
+    location /media/ {
+        alias $APP_DIR/media/;
     }
 
     location / {
