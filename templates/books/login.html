@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — AI Universe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 440px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+            animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
+        .auth-logo { text-align: center; margin-bottom: 2rem; }
+        .auth-logo .logo-text { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff; }
+        .auth-logo .logo-accent { background: linear-gradient(135deg, #6366f1, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .auth-title { font-size: 1.6rem; font-weight: 700; color: #fff; text-align: center; margin-bottom: 0.5rem; }
+        .auth-subtitle { color: rgba(255,255,255,0.5); text-align: center; font-size: 0.9rem; margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-label { display: block; color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; }
+        .form-input {
+            width: 100%; padding: 0.875rem 1rem;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            color: #fff; font-family: 'Outfit', sans-serif; font-size: 0.95rem;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+        .form-input:focus { outline: none; border-color: #6366f1; background: rgba(99,102,241,0.08); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+        .form-input::placeholder { color: rgba(255,255,255,0.3); }
+        .auth-btn {
+            width: 100%; padding: 1rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none; border-radius: 12px;
+            color: #fff; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+            font-family: 'Outfit', sans-serif; margin-top: 0.5rem;
+        }
+        .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99,102,241,0.4); }
+        .auth-footer { text-align: center; margin-top: 1.5rem; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+        .auth-footer a { color: #8b5cf6; text-decoration: none; font-weight: 600; }
+        .auth-footer a:hover { color: #a78bfa; }
+        .alert { padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.875rem; }
+        .alert-error { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+        .alert-success { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+        .alert-info { background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); color: #a5b4fc; }
+        .divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 1.5rem 0; }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <span class="logo-text">AI<span class="logo-accent">Universe</span></span>
+            </div>
+
+            <h1 class="auth-title">Welcome Back 👋</h1>
+            <p class="auth-subtitle">Books library access ke liye login karein</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label" for="id_login_username">Username</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="id_login_password">Password</label>
+                    {{ form.password }}
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="alert alert-error">{{ form.non_field_errors.0 }}</div>
+                {% endif %}
+                <button type="submit" class="auth-btn" id="login-btn">Login karo →</button>
+            </form>
+
+            <hr class="divider">
+            <div class="auth-footer">
+                Account nahi hai? <a href="{% url 'signup' %}">Sign Up karo</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,226 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Book Upload — AI Universe Books{% endblock %}
+
+{% block extra_head %}
+<style>
+.upload-page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 7rem 2rem 4rem;
+}
+.upload-back {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    color: rgba(255,255,255,0.5); text-decoration: none;
+    font-size: 0.9rem; margin-bottom: 2rem;
+    transition: color 0.2s;
+}
+.upload-back:hover { color: #fff; }
+.upload-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 2.5rem;
+    backdrop-filter: blur(20px);
+}
+.upload-header { margin-bottom: 2rem; }
+.upload-header h1 { font-size: 1.75rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+.upload-header p { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+
+.form-group { margin-bottom: 1.5rem; }
+.form-label {
+    display: block;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.875rem; font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.form-label span { color: rgba(255,255,255,0.35); font-weight: 400; margin-left: 0.35rem; }
+.form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    color: #fff; font-family: 'Outfit', sans-serif; font-size: 0.95rem;
+    transition: all 0.2s; box-sizing: border-box;
+    resize: vertical;
+}
+.form-input:focus { outline: none; border-color: #6366f1; background: rgba(99,102,241,0.08); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+.form-input::placeholder { color: rgba(255,255,255,0.25); }
+
+/* Drag-drop file zones */
+.drop-zone {
+    border: 2px dashed rgba(99,102,241,0.4);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    background: rgba(99,102,241,0.04);
+}
+.drop-zone:hover, .drop-zone.dragover {
+    border-color: #6366f1;
+    background: rgba(99,102,241,0.1);
+}
+.drop-zone .drop-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.drop-zone p { color: rgba(255,255,255,0.55); font-size: 0.875rem; margin: 0; }
+.drop-zone strong { color: #a5b4fc; }
+.drop-zone input[type="file"] {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.file-chosen {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: #86efac;
+    display: none;
+}
+
+.cover-drop-zone { border-color: rgba(139,92,246,0.4); background: rgba(139,92,246,0.04); }
+.cover-drop-zone:hover { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
+
+.divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 1.5rem 0; }
+
+.notice-box {
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    color: #a5b4fc;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: flex-start; gap: 0.75rem;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none; border-radius: 14px;
+    color: #fff; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.3s;
+    font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(99,102,241,0.45); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.alert { padding: 0.875rem 1.25rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.875rem; }
+.alert-error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+.alert-success { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.25); color: #86efac; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="upload-page">
+    <a href="{% url 'book_list' %}" class="upload-back">← Library par wapas jao</a>
+
+    <div class="upload-card">
+        <div class="upload-header">
+            <h1>📤 Book Upload karo</h1>
+            <p>PDF upload karein — admin review ke baad library mein dikhegi</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="notice-box">
+            <span>ℹ️</span>
+            <div>Upload ke baad admin approval hogi. Approved hone par hi library mein dikhegi. Max file size: <strong>50 MB</strong>.</div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="upload-form">
+            {% csrf_token %}
+
+            <!-- Title -->
+            <div class="form-group">
+                <label class="form-label" for="id_title">Book Title <span>*</span></label>
+                {{ form.title }}
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label class="form-label" for="id_description">Short Description <span>(optional)</span></label>
+                {{ form.description }}
+            </div>
+
+            <hr class="divider">
+
+            <!-- PDF Upload -->
+            <div class="form-group">
+                <label class="form-label">PDF File Upload karo <span>*</span></label>
+                <div class="drop-zone" id="pdf-drop-zone">
+                    <div class="drop-icon">📄</div>
+                    <p>PDF drag karein ya <strong>click karke select karein</strong></p>
+                    <p style="margin-top:0.35rem; font-size:0.78rem; opacity:0.6;">Sirf .pdf files — Max 50 MB</p>
+                    {{ form.pdf_file }}
+                    <div class="file-chosen" id="pdf-chosen">✅ File selected: <span id="pdf-name"></span></div>
+                </div>
+            </div>
+
+            <!-- Cover Image Upload -->
+            <div class="form-group">
+                <label class="form-label">Cover Image <span>(optional)</span></label>
+                <div class="drop-zone cover-drop-zone" id="cover-drop-zone">
+                    <div class="drop-icon">🖼️</div>
+                    <p>Cover image drag karein ya <strong>click karke select karein</strong></p>
+                    <p style="margin-top:0.35rem; font-size:0.78rem; opacity:0.6;">JPG, PNG, WebP — Max 5 MB</p>
+                    {{ form.cover_image }}
+                    <div class="file-chosen" id="cover-chosen">✅ File selected: <span id="cover-name"></span></div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-upload-btn">
+                📤 Upload karo
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // PDF file picker feedback
+    const pdfInput = document.getElementById('id_pdf_file');
+    if (pdfInput) {
+        pdfInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                document.getElementById('pdf-chosen').style.display = 'block';
+                document.getElementById('pdf-name').textContent = this.files[0].name;
+            }
+        });
+    }
+
+    // Cover image picker feedback
+    const coverInput = document.getElementById('id_cover_image');
+    if (coverInput) {
+        coverInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                document.getElementById('cover-chosen').style.display = 'block';
+                document.getElementById('cover-name').textContent = this.files[0].name;
+            }
+        });
+    }
+
+    // Drag & drop highlight
+    ['pdf-drop-zone', 'cover-drop-zone'].forEach(id => {
+        const zone = document.getElementById(id);
+        if (!zone) return;
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+        zone.addEventListener('drop', e => zone.classList.remove('dragover'));
+    });
+
+    // Disable submit on click to prevent double submit
+    document.getElementById('upload-form').addEventListener('submit', function() {
+        const btn = document.getElementById('submit-upload-btn');
+        btn.disabled = true;
+        btn.textContent = '⏳ Upload ho raha hai...';
+    });
+</script>
+{% endblock %}

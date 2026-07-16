@@ -1,0 +1,226 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ book.title }} — AI Universe Books{% endblock %}
+
+{% block extra_head %}
+<style>
+.detail-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 7rem 2rem 4rem;
+}
+.detail-back {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    color: rgba(255,255,255,0.5); text-decoration: none;
+    font-size: 0.9rem; margin-bottom: 2rem;
+    transition: color 0.2s;
+}
+.detail-back:hover { color: #fff; }
+
+.detail-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+@media (max-width: 768px) {
+    .detail-layout { grid-template-columns: 1fr; }
+}
+
+/* Left — Book Info Card */
+.book-info-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    position: sticky;
+    top: 5rem;
+}
+.book-cover-lg {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    display: block;
+}
+.book-cover-lg-placeholder {
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+}
+.book-info-body { padding: 1.5rem; }
+.book-info-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+.book-info-desc {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+.book-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+.stat-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 0.875rem;
+    text-align: center;
+}
+.stat-box .stat-val {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    display: block;
+}
+.stat-box .stat-lbl {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 0.15rem;
+}
+.uploader-info {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 1.25rem;
+}
+.detail-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+.btn-download-lg {
+    display: block; width: 100%;
+    padding: 0.875rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none; border-radius: 12px;
+    color: #fff; font-size: 0.95rem; font-weight: 600;
+    text-align: center; text-decoration: none;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+.btn-download-lg:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99,102,241,0.4); }
+.btn-back-lg {
+    display: block; width: 100%;
+    padding: 0.875rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    color: rgba(255,255,255,0.7); font-size: 0.95rem; font-weight: 600;
+    text-align: center; text-decoration: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+.btn-back-lg:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* Right — PDF Viewer */
+.pdf-viewer-wrapper {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    overflow: hidden;
+}
+.pdf-viewer-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.pdf-viewer-header h3 {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+}
+.pdf-viewer-header .pdf-pages-badge {
+    background: rgba(99,102,241,0.2);
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 8px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    color: #a5b4fc;
+}
+.pdf-embed {
+    width: 100%;
+    height: 75vh;
+    min-height: 600px;
+    border: none;
+    display: block;
+    background: #1a1a2e;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="detail-page">
+    <a href="{% url 'book_list' %}" class="detail-back" id="back-to-library">
+        ← Library par wapas jao
+    </a>
+
+    <div class="detail-layout">
+        <!-- Left: Book Info -->
+        <aside class="book-info-card">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="book-cover-lg">
+            {% else %}
+                <div class="book-cover-lg-placeholder" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                    📖
+                </div>
+            {% endif %}
+
+            <div class="book-info-body">
+                <h1 class="book-info-title">{{ book.title }}</h1>
+                {% if book.description %}
+                    <p class="book-info-desc">{{ book.description }}</p>
+                {% endif %}
+
+                <div class="book-stats">
+                    <div class="stat-box">
+                        <span class="stat-val">{{ book.page_count|default:"—" }}</span>
+                        <span class="stat-lbl">📄 Total Pages</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-val">{{ book.file_size_mb|default:"—" }}</span>
+                        <span class="stat-lbl">💾 File Size (MB)</span>
+                    </div>
+                </div>
+
+                <p class="uploader-info">
+                    👤 Uploaded by <strong style="color:rgba(255,255,255,0.7)">{{ book.uploaded_by.username }}</strong>
+                    &nbsp;•&nbsp; {{ book.uploaded_at|date:"d M Y" }}
+                </p>
+
+                <div class="detail-actions">
+                    <a href="{% url 'book_download' book.pk %}" class="btn-download-lg" id="download-book-{{ book.pk }}">
+                        ⬇ Download PDF
+                    </a>
+                    <a href="{% url 'book_list' %}" class="btn-back-lg">← Library</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right: PDF Viewer -->
+        <div class="pdf-viewer-wrapper">
+            <div class="pdf-viewer-header">
+                <h3>📄 PDF Preview</h3>
+                {% if book.page_count %}
+                    <span class="pdf-pages-badge">{{ book.page_count }} pages</span>
+                {% endif %}
+            </div>
+            <iframe
+                id="pdf-viewer-frame"
+                class="pdf-embed"
+                src="{{ book.pdf_file.url }}"
+                title="{{ book.title }} PDF Preview"
+            >
+                <p>Browser PDF support nahi karta. <a href="{{ book.pdf_file.url }}" style="color:#a5b4fc">Yahaan se download karein</a></p>
+            </iframe>
+        </div>
+    </div>
+</div>
+{% endblock %}

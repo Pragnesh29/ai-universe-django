@@ -1,0 +1,334 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Books Library — AI Universe{% endblock %}
+{% block meta_desc %}AI Universe Books — PDF library with search, preview and download{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ── Books Page ── */
+.books-hero {
+    padding: 6rem 2rem 3rem;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.books-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+.books-hero h1 span {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.books-hero p { color: rgba(255,255,255,0.55); font-size: 1.1rem; }
+
+/* Search + Upload Bar */
+.books-toolbar {
+    max-width: 1200px;
+    margin: 0 auto 2.5rem;
+    padding: 0 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.search-wrapper {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+}
+.search-wrapper .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.4);
+}
+.search-input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+.search-input:focus { outline: none; border-color: #6366f1; background: rgba(99,102,241,0.08); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+.search-input::placeholder { color: rgba(255,255,255,0.3); }
+.upload-btn {
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none; border-radius: 14px;
+    color: #fff; font-weight: 600; font-size: 0.95rem;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.3s; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.upload-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99,102,241,0.4); }
+
+/* Books Grid */
+.books-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+}
+.books-meta {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+.book-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: flex; flex-direction: column;
+}
+.book-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(99,102,241,0.4);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(99,102,241,0.2);
+}
+.book-cover {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+.book-cover-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+}
+.book-body {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.book-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.book-desc {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+.book-meta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.book-badge {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.book-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+.btn-view {
+    flex: 1;
+    padding: 0.65rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none; border-radius: 10px;
+    color: #fff; font-size: 0.85rem; font-weight: 600;
+    text-align: center; text-decoration: none;
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+}
+.btn-view:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-download {
+    padding: 0.65rem 0.875rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem; font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.35rem;
+}
+.btn-download:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: rgba(255,255,255,0.4);
+}
+.empty-state .empty-icon { font-size: 4rem; margin-bottom: 1rem; }
+.empty-state h3 { font-size: 1.3rem; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; }
+
+/* Messages */
+.messages-bar { max-width: 1200px; margin: 1rem auto 0; padding: 0 2rem; }
+.alert { padding: 0.875rem 1.25rem; border-radius: 12px; margin-bottom: 0.75rem; font-size: 0.9rem; }
+.alert-success { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.25); color: #86efac; }
+.alert-error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+.alert-info { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); color: #a5b4fc; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Messages -->
+{% if messages %}
+<div class="messages-bar">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Hero -->
+<section class="books-hero">
+    <h1>📚 Books <span>Library</span></h1>
+    <p>AI, Technology aur Knowledge ki duniya — PDF padho, preview karo, download karo.</p>
+</section>
+
+<!-- Toolbar -->
+<div class="books-toolbar">
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <form method="get" action="{% url 'book_list' %}">
+            <input
+                type="search"
+                name="q"
+                class="search-input"
+                id="book-search-input"
+                placeholder="Title ya description se book dhundho..."
+                value="{{ query }}"
+                autocomplete="off"
+            >
+        </form>
+    </div>
+    <a href="{% url 'book_upload' %}" class="upload-btn" id="upload-book-btn">
+        ➕ Book Upload karo
+    </a>
+</div>
+
+<!-- Books Section -->
+<div class="books-section">
+    {% if query %}
+        <p class="books-meta">
+            "{{ query }}" ke liye {{ books.count }} result{{ books.count|pluralize }} mila
+        </p>
+    {% else %}
+        <p class="books-meta">Total {{ total_books }} book{{ total_books|pluralize }} available</p>
+    {% endif %}
+
+    {% if books %}
+    <div class="books-grid">
+        {% for book in books %}
+        <div class="book-card">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="book-cover">
+            {% else %}
+                <div class="book-cover-placeholder" style="background: linear-gradient(135deg, #{{ book.pk|stringformat:'02x' }}3a8f, #6366f1);">
+                    📖
+                </div>
+            {% endif %}
+            <div class="book-body">
+                <h3 class="book-title">{{ book.title }}</h3>
+                {% if book.description %}
+                    <p class="book-desc">{{ book.description }}</p>
+                {% endif %}
+                <div class="book-meta">
+                    {% if book.page_count %}
+                        <span class="book-badge">📄 {{ book.page_count }} pages</span>
+                    {% endif %}
+                    {% if book.file_size_mb %}
+                        <span class="book-badge">💾 {{ book.file_size_mb }} MB</span>
+                    {% endif %}
+                    <span class="book-badge">👤 {{ book.uploaded_by.username }}</span>
+                </div>
+                <div class="book-actions">
+                    <a href="{% url 'book_detail' book.pk %}" class="btn-view" id="view-book-{{ book.pk }}">
+                        👁 Preview
+                    </a>
+                    <a href="{% url 'book_download' book.pk %}" class="btn-download" id="download-book-{{ book.pk }}">
+                        ⬇ Download
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        {% if query %}
+            <h3>"{{ query }}" se koi book nahi mili</h3>
+            <p>Alag keywords try karein</p>
+        {% else %}
+            <h3>Library abhi khali hai</h3>
+            <p>Pehli book upload karo! 🚀</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Auto-submit search on Enter
+    const searchInput = document.getElementById('book-search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                this.closest('form').submit();
+            }
+        });
+        // Live search with debounce
+        let timer;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                if (this.value.length === 0 || this.value.length >= 2) {
+                    this.closest('form').submit();
+                }
+            }, 500);
+        });
+    }
+</script>
+{% endblock %}

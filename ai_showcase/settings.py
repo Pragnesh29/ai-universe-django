@@ -1,6 +1,11 @@
 from pathlib import Path
 import os
 
+# Login / Auth settings
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/books/'
+LOGOUT_REDIRECT_URL = '/login/'
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY: Change this in production! Generate with:
@@ -27,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'books',
 ]
 
 MIDDLEWARE = [
@@ -86,4 +92,12 @@ STORAGES = {
     },
 }
 
+# Media files (user uploads — PDFs, cover images)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# File upload size limit — 50MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800

@@ -41,3 +41,8 @@ desktop.ini
 dist/
 build/
 *.egg-info/
+
+# SSH Keys (never commit these!)
+*.key
+*.pem
+*.pub
