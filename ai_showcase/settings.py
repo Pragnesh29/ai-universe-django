@@ -2,9 +2,12 @@ from pathlib import Path
 import os
 
 # Login / Auth settings
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/books/'
-LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_URL = '/ai-universe/login/'
+LOGIN_REDIRECT_URL = '/ai-universe/books/'
+LOGOUT_REDIRECT_URL = '/ai-universe/login/'
+
+# Script name for hosting under subpath /ai-universe
+FORCE_SCRIPT_NAME = '/ai-universe'
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,7 +84,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files — WhiteNoise will serve from STATIC_ROOT in production
-STATIC_URL = '/static/'
+STATIC_URL = '/ai-universe/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
@@ -93,7 +96,7 @@ STORAGES = {
 }
 
 # Media files (user uploads — PDFs, cover images)
-MEDIA_URL = '/media/'
+MEDIA_URL = '/ai-universe/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

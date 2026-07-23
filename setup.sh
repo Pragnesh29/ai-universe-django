@@ -85,6 +85,9 @@ server {
     listen 80;
     server_name $PUBLIC_IP;
 
+    # Allow uploads up to 50MB
+    client_max_body_size 50M;
+
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /static/ {
